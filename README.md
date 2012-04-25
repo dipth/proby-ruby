@@ -72,5 +72,5 @@ by setting the `@proby_id` attribute to the task id.
 
 API Doc
 -------
-[http://rdoc.info/github/signal/proby/master/frames](http://rdoc.info/github/signal/proby/master/frames)
+[http://rdoc.info/github/signal/proby-ruby/master/frames](http://rdoc.info/github/signal/proby-ruby/master/frames)
 
