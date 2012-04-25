@@ -1,5 +1,7 @@
 require 'logger'
+require 'httparty'
 
+require 'proby/proby_http_api'
 require 'proby/notifier'
 require 'proby/resque_plugin'
 
@@ -7,7 +9,6 @@ module Proby
 
   # A simple library for working with the Proby task monitoring application.
   class << self
-    include Notifier
 
     # Set your Proby API key.
     #
@@ -17,6 +18,11 @@ module Proby
     #   Proby.api_key = '1234567890abcdefg'
     def api_key=(api_key)
       @api_key = api_key
+    end
+
+    # Get the api key.
+    def api_key
+      @api_key
     end
 
     # Set the logger to be used by Proby.
@@ -34,6 +40,29 @@ module Proby
     def logger
       @logger || Logger.new("/dev/null")
     end
+
+    # Send a start notification for this task to Proby.
+    #
+    # @param [String] proby_task_id The id of the task to be notified. If nil, the
+    #                               value of the +PROBY_TASK_ID+ environment variable will be used.
+    def send_start_notification(proby_task_id=nil)
+      Notifier.send_notification('start', proby_task_id)
+    end
+
+    # Send a finish notification for this task to Proby
+    #
+    # @param [String] proby_task_id The id of the task to be notified. If nil, the
+    #                               value of the +PROBY_TASK_ID+ environment variable will be used.
+    # @param [Hash] options The options for the finish notification
+    # @option options [Boolean] :failed true if this task run resulted in some sort of failure. Setting
+    #                                   this parameter to true will trigger a notification to be sent to
+    #                                   the alarms configured for the given task. Defaults to false.
+    # @option options [String] :error_message A string message describing the failure that occurred.
+    #                                         1,000 character limit.
+    def send_finish_notification(proby_task_id=nil, options={})
+      Notifier.send_notification('finish', proby_task_id, options)
+    end
+
   end
 end
 
