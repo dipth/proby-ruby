@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
-  s.add_dependency('httparty', '~> 0.8.1')
+  s.add_dependency 'httparty', '~> 0.8.1'
+  s.add_dependency 'chronic', '~> 0.6.7'
 
   s.add_development_dependency "bundler", ">= 1.0.0"
   s.add_development_dependency "rake", "~> 0.9.0"

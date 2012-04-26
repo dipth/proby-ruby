@@ -1,7 +1,10 @@
 require 'logger'
 require 'httparty'
+require 'chronic'
 
+require 'proby/exceptions'
 require 'proby/proby_http_api'
+require 'proby/proby_task'
 require 'proby/notifier'
 require 'proby/resque_plugin'
 
