@@ -54,11 +54,11 @@ module Proby
       end 
     end
 
-    # Fetch the Proby task with the specified task ID.
+    # Fetch the Proby task with the specified API ID.
     #
-    # @param [String] api_id The api id of the Proby task you would like to get.
+    # @param [String] api_id The API ID of the Proby task you would like to fetch.
     #
-    # @return [ProbyTask] Your Proby task, or nil if it could not be found.
+    # @return [ProbyTask] The Proby task, or nil if it could not be found.
     #
     # @example
     #   ProbyTask.fetch('my_proby_task_api_id')
@@ -88,14 +88,14 @@ module Proby
     # @option attributes [String] :time_zone <b>Optional</b> The time zone of the machine executing the task.
     # @option attributes [String] :machine <b>Optional</b> The name of the machine that is responsible for running this task.
     #                               Will default to the default time zone configured in Proby if not specified.
-    # @option attributes [String] :finish_alarms_enabled <b>Optional</b> true if you would like to receive finish alarms for
+    # @option attributes [TrueClass|FalseClass] :finish_alarms_enabled <b>Optional</b> true if you would like to receive finish alarms for
     #                               this task, false otherwise (default: true).
-    # @option attributes [String] :maximum_run_time <b>Optional</b> The maximum amount of time the task is allowed to run before
+    # @option attributes [Fixnum] :maximum_run_time <b>Optional</b> The maximum amount of time the task is allowed to run before
     #                               Proby sends a finish alarm. If not specified, Proby will determine when an alarm should be
     #                               sent based on past run times.
-    # @option attributes [String] :start_notification_grace_period <b>Optional</b> The number of minutes to wait for a task to
+    # @option attributes [Fixnum] :start_notification_grace_period <b>Optional</b> The number of minutes to wait for a task to
     #                               send its start notification after it should have started before sending an alarm.
-    # @option attributes [String] :consecutive_alarmed_tasks_required_to_trigger_alarm <b>Optional</b> The number of consecutive
+    # @option attributes [Fixnum] :consecutive_alarmed_tasks_required_to_trigger_alarm <b>Optional</b> The number of consecutive
     #                               tasks that must fail before an alarm is sent.
     #
     # @return [ProbyTask] The task that was created.
@@ -119,7 +119,7 @@ module Proby
       end 
     end
 
-    # Saves the task in Proby, updating all attributes to the values stored in object.  Only the attributes specified in
+    # Saves the task in Proby, updating all attributes to the values stored in the object.  Only the attributes specified in
     # the ProbyTask.create documentation can be updated.
     #
     # @example
