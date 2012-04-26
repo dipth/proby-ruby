@@ -2,7 +2,11 @@ module Proby
 
   # Represents the status of a Proby task
   class ProbyTaskStatus
-    attr_reader :description, :details
+    # The description of the task (OK, ERROR, PAUSED)
+    attr_reader :description
+
+    # Any details (why the task is in the ERROR state)
+    attr_reader :details
 
     def initialize(attributes={})
       @description = attributes['description']
@@ -12,10 +16,52 @@ module Proby
 
   # Represents a task in Proby
   class ProbyTask < ProbyHttpApi
-    attr_accessor :name, :crontab, :time_zone, :machine, :finish_alarms_enabled, :maximum_run_time,
-      :start_notification_grace_period, :consecutive_alarmed_tasks_required_to_trigger_alarm
-    attr_reader :api_id, :paused, :consecutive_alarmed_tasks, :created_at, :updated_at, :status
+    # The name of the task
+    attr_accessor :name
 
+    # The schedule for the task, specified in crontab format
+    attr_accessor :crontab
+
+    # The time zone of the machine executing the task
+    attr_accessor :time_zone
+
+    # The name of the machine that is responsible for running this task
+    attr_accessor :machine
+
+    # Should finish alarms be sent when the task runs longer than expected?
+    attr_accessor :finish_alarms_enabled
+
+    # The maximum amount of time the task is allowed to run before Proby sends
+    # a finish alarm. If not specified, Proby will determine when an alarm should
+    # be sent based on past run times
+    attr_accessor :maximum_run_time
+
+    # The number of minutes to wait for a task to send its start notification after it
+    # should have started before sending an alarm
+    attr_accessor :start_notification_grace_period
+
+    # The number of consecutive tasks that must fail before an alarm is sent
+    attr_accessor :consecutive_alarmed_tasks_required_to_trigger_alarm
+
+    # The API Task ID of the task
+    attr_reader :api_id
+
+    # Is the task currently paused?
+    attr_reader :paused
+
+    # The number of consecutive times this task has triggered an alarm
+    attr_reader :consecutive_alarmed_tasks
+
+    # The date and time this task was created
+    attr_reader :created_at
+
+    # The date and time this task was updated
+    attr_reader :updated_at
+
+    # The current status of the task, represented as a ProbyTaskStatus
+    attr_reader :status
+
+    # <b>Should not be called directly</b>
     def initialize(attributes={})
       @name = attributes['name']
       @api_id = attributes['api_id']
@@ -35,13 +81,13 @@ module Proby
 
     # Get a single, or all tasks from Proby.
     #
-    # @param :all if you are fetching all tasks, or the [String] api_id of the Proby task you would like to fetch.
+    # @param [Object] param :all if you are fetching all tasks, or the api_id of the Proby task you would like to fetch.
     #
-    # @return [Array<ProbyTask>] if requesting all tasks.  If an api_id was provided, the [ProbyTask] with that api_id
-    #                            will be returned if it exists, otherwise nil will be returned.
+    # @return If requesting all tasks, an [Array<ProbyTask>] will be returned.  If an api_id was provided, the
+    #           ProbyTask with that api_id will be returned if it exists, or nil if it could not be found.
     #
     # @example
-    #   my_tasks = ProbyTask.find(:all)
+    #   all_of_my_tasks = ProbyTask.find(:all)
     #   my_task = ProbyTask.find('my_proby_task_api_id')
     def self.find(param)
       ensure_api_key_set
@@ -50,20 +96,20 @@ module Proby
 
     # Create a new Proby task.
     #
-    # @param [Hash] attributes The attributes for you task.
+    # @param [Hash] attributes The attributes for your task.
     # @option attributes [String] :name A name for your task.
     # @option attributes [String] :crontab The schedule of the task, specified in cron format.
-    # @option attributes [String] :time_zone <b>Optional</b> The time zone of the machine executing the task.
-    # @option attributes [String] :machine <b>Optional</b> The name of the machine that is responsible for running this task.
+    # @option attributes [String] :time_zone <b>(Optional)</b> The time zone of the machine executing the task.
+    # @option attributes [String] :machine <b>(Optional)</b> The name of the machine that is responsible for running this task.
     #                               Will default to the default time zone configured in Proby if not specified.
-    # @option attributes [Boolean] :finish_alarms_enabled <b>Optional</b> true if you would like to receive finish alarms for
+    # @option attributes [Boolean] :finish_alarms_enabled <b>(Optional)</b> true if you would like to receive finish alarms for
     #                                this task, false otherwise (default: true).
-    # @option attributes [Fixnum] :maximum_run_time <b>Optional</b> The maximum amount of time the task is allowed to run before
+    # @option attributes [Fixnum] :maximum_run_time <b>(Optional)</b> The maximum amount of time the task is allowed to run before
     #                               Proby sends a finish alarm. If not specified, Proby will determine when an alarm should be
     #                               sent based on past run times.
-    # @option attributes [Fixnum] :start_notification_grace_period <b>Optional</b> The number of minutes to wait for a task to
+    # @option attributes [Fixnum] :start_notification_grace_period <b>(Optional)</b> The number of minutes to wait for a task to
     #                               send its start notification after it should have started before sending an alarm.
-    # @option attributes [Fixnum] :consecutive_alarmed_tasks_required_to_trigger_alarm <b>Optional</b> The number of consecutive
+    # @option attributes [Fixnum] :consecutive_alarmed_tasks_required_to_trigger_alarm <b>(Optional)</b> The number of consecutive
     #                               tasks that must fail before an alarm is sent.
     #
     # @return [ProbyTask] The task that was created.
