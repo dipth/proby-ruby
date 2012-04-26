@@ -15,7 +15,7 @@ class ProbyTaskTest < Test::Unit::TestCase
   should "raise an error if the api key has not been set" do
     Proby.api_key = nil
     e = assert_raise(Proby::InvalidApiKeyException) do
-      Proby::ProbyTask.list
+      Proby::ProbyTask.find(:all)
     end
     assert_equal "Your Proby API key has not been set.  Set it using Proby.api_key = 'my_api_key'", e.message
   end
@@ -84,7 +84,7 @@ class ProbyTaskTest < Test::Unit::TestCase
   ]
 }
 END
-    tasks = Proby::ProbyTask.list
+    tasks = Proby::ProbyTask.find(:all)
     assert_equal 3, tasks.size
 
     task = tasks[1]
@@ -113,7 +113,7 @@ END
 }
 END
     e = assert_raise Proby::ApiException do
-      Proby::ProbyTask.list
+      Proby::ProbyTask.find(:all)
     end
     assert e.message.include?("API request failed with a response code of 400")
     assert e.message.include?("Something bad happened")
@@ -144,7 +144,7 @@ END
 }
 END
 
-    task = Proby::ProbyTask.fetch("abc123")
+    task = Proby::ProbyTask.find("abc123")
     assert_equal "task 1", task.name
     assert_equal "abc123", task.api_id
     assert_equal "* * * * *", task.crontab
@@ -164,7 +164,7 @@ END
 
   should "return nil if the specific task could not be found" do
     FakeWeb.register_uri(:get, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks/abc123.json', :status => ['404', 'Not Found'])
-    assert_nil Proby::ProbyTask.fetch("abc123")
+    assert_nil Proby::ProbyTask.find("abc123")
   end
 
   should "raise an exception if unable to fetch a specific task" do
@@ -175,15 +175,15 @@ END
 }
 END
     e = assert_raise Proby::ApiException do
-      Proby::ProbyTask.fetch("abc123")
+      Proby::ProbyTask.find("abc123")
     end
     assert e.message.include?("API request failed with a response code of 400")
     assert e.message.include?("Something bad happened")
   end
 
   should "raise an error if trying to fetch a task without specifying the api_id" do
-    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.fetch(nil) }
-    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.fetch(" ") }
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.find(nil) }
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.find(" ") }
   end
 
   should "be able to create a new task" do

@@ -12,7 +12,8 @@ module Proby
 
   # Represents a task in Proby
   class ProbyTask < ProbyHttpApi
-    attr_accessor :name, :crontab, :time_zone, :machine, :finish_alarms_enabled, :maximum_run_time, :start_notification_grace_period, :consecutive_alarmed_tasks_required_to_trigger_alarm
+    attr_accessor :name, :crontab, :time_zone, :machine, :finish_alarms_enabled, :maximum_run_time,
+      :start_notification_grace_period, :consecutive_alarmed_tasks_required_to_trigger_alarm
     attr_reader :api_id, :paused, :consecutive_alarmed_tasks, :created_at, :updated_at, :status
 
     def initialize(attributes={})
@@ -32,52 +33,19 @@ module Proby
       @status = ProbyTaskStatus.new(attributes['status']) if attributes['status']
     end
 
-    # Get a list of all of your Proby tasks.
+    # Get a single, or all tasks from Proby.
     #
-    # @return [Array<ProbyTask>] Your Proby tasks.
+    # @param :all if you are fetching all tasks, or the [String] api_id of the Proby task you would like to fetch.
     #
-    # @example
-    #   my_tasks = ProbyTask.list
-    def self.list
-      ensure_api_key_set
-
-      Proby.logger.info "Getting the list of tasks"
-      response = get('/api/v1/tasks.json',
-                     :format => :json,
-                     :headers => default_headers)
-
-      if response.code == 200 
-        data = response.parsed_response['tasks']
-        data.map { |task_data| new(task_data) }
-      else
-        handle_api_failure(response)
-      end 
-    end
-
-    # Fetch the Proby task with the specified API ID.
-    #
-    # @param [String] api_id The API ID of the Proby task you would like to fetch.
-    #
-    # @return [ProbyTask] The Proby task, or nil if it could not be found.
+    # @return [Array<ProbyTask>] if requesting all tasks.  If an api_id was provided, the [ProbyTask] with that api_id
+    #                            will be returned if it exists, otherwise nil will be returned.
     #
     # @example
-    #   ProbyTask.fetch('my_proby_task_api_id')
-    def self.fetch(api_id)
+    #   my_tasks = ProbyTask.find(:all)
+    #   my_task = ProbyTask.find('my_proby_task_api_id')
+    def self.find(param)
       ensure_api_key_set
-      raise InvalidParameterException.new("api_id is required") if api_id.nil? || api_id.strip.empty?
-
-      Proby.logger.info "Fetching task from Proby: #{api_id}"
-      response = get("/api/v1/tasks/#{api_id}.json",
-                     :format => :json,
-                     :headers => default_headers)
-
-      if response.code == 200 
-        new(response.parsed_response['task'])
-      elsif response.code == 404
-        nil
-      else
-        handle_api_failure(response)
-      end 
+      param == :all ? list : fetch(param)
     end
 
     # Create a new Proby task.
@@ -213,6 +181,37 @@ module Proby
     end
 
     private
+
+    def self.list
+      Proby.logger.info "Getting the list of tasks"
+      response = get('/api/v1/tasks.json',
+                     :format => :json,
+                     :headers => default_headers)
+
+      if response.code == 200
+        data = response.parsed_response['tasks']
+        data.map { |task_data| new(task_data) }
+      else
+        handle_api_failure(response)
+      end
+    end
+
+    def self.fetch(api_id)
+      raise InvalidParameterException.new("api_id is required") if api_id.nil? || api_id.strip.empty?
+
+      Proby.logger.info "Fetching task from Proby: #{api_id}"
+      response = get("/api/v1/tasks/#{api_id}.json",
+                     :format => :json,
+                     :headers => default_headers)
+
+      if response.code == 200
+        new(response.parsed_response['task'])
+      elsif response.code == 404
+        nil
+      else
+        handle_api_failure(response)
+      end
+    end
 
     def self.ensure_api_key_set
       if Proby.api_key.nil? || Proby.api_key.strip.empty?
