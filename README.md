@@ -70,6 +70,25 @@ by setting the `@proby_id` attribute to the task id.
     end
 
 
+Managing Tasks
+--------------
+The Proby::ProbyTask class can be used to create, read, update, delete, pause, and unpause your
+tasks on Proby.
+
+    my_tasks = Proby::ProbyTask.find(:all)
+    a_specific_task = Proby::ProbyTask.find("the_proby_task_id")
+
+    task = Proby::ProbyTask.create(:name => 'Task name', :crontab => '* * * * *')
+
+    task.name = "New name"
+    task.save
+
+    task.pause
+    task.unpause
+
+    task.delete
+
+
 API Doc
 -------
 [http://rdoc.info/github/signal/proby-ruby/master/frames](http://rdoc.info/github/signal/proby-ruby/master/frames)
