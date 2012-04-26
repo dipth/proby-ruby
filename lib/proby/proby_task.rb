@@ -64,6 +64,7 @@ module Proby
     #   ProbyTask.fetch('my_proby_task_api_id')
     def self.fetch(api_id)
       ensure_api_key_set
+      raise InvalidParameterException.new("api_id is required") if api_id.nil? || api_id.strip.empty?
 
       Proby.logger.info "Fetching task from Proby: #{api_id}"
       response = get("/api/v1/tasks/#{api_id}.json",
@@ -103,6 +104,7 @@ module Proby
     #   proby_task = ProbyTask.create(:name => "My new task", :crontab => "* * * * *")
     def self.create(attributes={})
       ensure_api_key_set
+      raise InvalidParameterException.new("attributes are required") if attributes.nil? || attributes.empty?
 
       Proby.logger.info "Creating task with attributes: #{attributes.inspect}"
       response = post("/api/v1/tasks.json",

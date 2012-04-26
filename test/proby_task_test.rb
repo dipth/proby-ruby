@@ -181,6 +181,11 @@ END
     assert e.message.include?("Something bad happened")
   end
 
+  should "raise an error if trying to fetch a task without specifying the api_id" do
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.fetch(nil) }
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.fetch(" ") }
+  end
+
   should "be able to create a new task" do
     FakeWeb.register_uri(:post, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks.json', :status => ['201', 'Created'], :body => <<-END)
 {
@@ -238,6 +243,11 @@ END
     end
     assert e.message.include?("API request failed with a response code of 400")
     assert e.message.include?("Something bad happened")
+  end
+
+  should "raise an error if trying to create a task without specifying the attributes" do
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.create(nil) }
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.create({}) }
   end
 
   should "be able to update a task" do
