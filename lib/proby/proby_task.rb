@@ -119,6 +119,8 @@ module Proby
     def self.create(attributes={})
       ensure_api_key_set
       raise InvalidParameterException.new("attributes are required") if attributes.nil? || attributes.empty?
+      raise InvalidParameterException.new("name is required") unless !blank?(attributes[:name]) || !blank?(attributes['name'])
+      raise InvalidParameterException.new("crontab is required") unless !blank?(attributes[:crontab]) || !blank?(attributes['crontab'])
 
       Proby.logger.info "Creating task with attributes: #{attributes.inspect}"
       response = post("/api/v1/tasks.json",
@@ -143,6 +145,8 @@ module Proby
     #   proby_task.save
     def save
       self.class.ensure_api_key_set
+      raise InvalidParameterException.new("name is required") if self.class.blank?(@name)
+      raise InvalidParameterException.new("crontab is required") if self.class.blank?(@crontab)
 
       attributes = {
         :name => @name,
@@ -268,6 +272,10 @@ module Proby
       if Proby.api_key.nil? || Proby.api_key.strip.empty?
         raise InvalidApiKeyException.new("Your Proby API key has not been set.  Set it using Proby.api_key = 'my_api_key'")
       end
+    end
+
+    def self.blank?(s)
+      s.nil? || s.strip.empty?
     end
 
   end

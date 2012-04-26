@@ -250,6 +250,11 @@ END
     assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.create({}) }
   end
 
+  should "raise an error if trying to create a task without the necessary required attributes" do
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.create(:name => "Foo") }
+    assert_raise(Proby::InvalidParameterException) { Proby::ProbyTask.create(:crontab => "* * * * *") }
+  end
+
   should "be able to update a task" do
     FakeWeb.register_uri(:put, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks/abc123.json', :status => ['200', 'OK'])
     proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *')
@@ -279,6 +284,22 @@ END
     end
     assert e.message.include?("API request failed with a response code of 400")
     assert e.message.include?("Something bad happened")
+  end
+
+  should "raise an error if trying to update a task without the necessary required attributes" do
+    proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *')
+
+    proby_task.name = nil
+    assert_raise(Proby::InvalidParameterException) { proby_task.save }
+
+    proby_task.name = "  "
+    assert_raise(Proby::InvalidParameterException) { proby_task.save }
+
+    proby_task.crontab = nil
+    assert_raise(Proby::InvalidParameterException) { proby_task.save }
+
+    proby_task.crontab = "  "
+    assert_raise(Proby::InvalidParameterException) { proby_task.save }
   end
 
   should "be able to delete a task" do
