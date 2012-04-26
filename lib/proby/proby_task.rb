@@ -161,7 +161,9 @@ module Proby
                                 :body => MultiJson.dump(:task => attributes),
                                 :headers => self.class.default_headers)
 
-      if response.code != 200 
+      if response.code == 200
+        true
+      else
         self.class.handle_api_failure(response)
       end 
     end
@@ -181,6 +183,7 @@ module Proby
 
       if response.code == 200 
         self.freeze
+        true
       else
         self.class.handle_api_failure(response)
       end 
@@ -201,6 +204,7 @@ module Proby
 
       if response.code == 200 
         @paused = true
+        true
       else
         self.class.handle_api_failure(response)
       end 
@@ -221,6 +225,7 @@ module Proby
 
       if response.code == 200 
         @paused = false
+        true
       else
         self.class.handle_api_failure(response)
       end 

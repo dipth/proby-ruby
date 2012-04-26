@@ -261,7 +261,7 @@ END
     proby_task.maximum_run_time = 60
     proby_task.start_notification_grace_period = 10
     proby_task.consecutive_alarmed_tasks_required_to_trigger_alarm = 4
-    proby_task.save
+    assert proby_task.save
   end
 
   should "raise an exception if unable to update a task" do
@@ -284,7 +284,7 @@ END
   should "be able to delete a task" do
     FakeWeb.register_uri(:delete, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks/abc123.json', :status => ['200', 'OK'])
     proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *')
-    proby_task.delete
+    assert proby_task.delete
     assert proby_task.frozen?
     e = assert_raise TypeError do
       proby_task.name = "foo"
@@ -310,7 +310,7 @@ END
   should "be able to pause a task" do
     FakeWeb.register_uri(:post, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks/abc123/pause.json', :status => ['200', 'OK'])
     proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *', 'paused' => 'false')
-    proby_task.pause
+    assert proby_task.pause
     assert_equal true, proby_task.paused
   end
 
@@ -332,7 +332,7 @@ END
   should "be able to unpause a task" do
     FakeWeb.register_uri(:post, Proby::ProbyHttpApi.base_uri + '/api/v1/tasks/abc123/unpause.json', :status => ['200', 'OK'])
     proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *', 'paused' => 'true')
-    proby_task.unpause
+    assert proby_task.unpause
     assert_equal false, proby_task.paused
   end
 
