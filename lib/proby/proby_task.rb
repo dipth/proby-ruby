@@ -125,7 +125,7 @@ module Proby
       Proby.logger.info "Creating task with attributes: #{attributes.inspect}"
       response = post("/api/v1/tasks.json",
                       :format => :json,
-                      :body => MultiJson.dump(:task => attributes),
+                      :body => MultiJson.encode(:task => attributes),
                       :headers => default_headers)
 
       if response.code == 201 
@@ -162,7 +162,7 @@ module Proby
       Proby.logger.info "Updating task #{@api_id} with attributes: #{attributes.inspect}"
       response = self.class.put("/api/v1/tasks/#{@api_id}.json",
                                 :format => :json,
-                                :body => MultiJson.dump(:task => attributes),
+                                :body => MultiJson.encode(:task => attributes),
                                 :headers => self.class.default_headers)
 
       if response.code == 200

@@ -14,7 +14,7 @@ module Proby
       end
 
       response = post("/api/v1/tasks/#{proby_task_id}/#{type}.json",
-                      :body => MultiJson.dump(options),
+                      :body => MultiJson.encode(options),
                       :format => :json,
                       :headers => default_headers)
       response.code
