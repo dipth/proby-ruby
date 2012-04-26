@@ -48,6 +48,8 @@ module Proby
     #
     # @param [String] proby_task_id The id of the task to be notified. If nil, the
     #                               value of the +PROBY_TASK_ID+ environment variable will be used.
+    #
+    # @return [Fixnum] The HTTP status code that was returned from Proby.
     def send_start_notification(proby_task_id=nil)
       Notifier.send_notification('start', proby_task_id)
     end
@@ -62,6 +64,8 @@ module Proby
     #                                   the alarms configured for the given task. Defaults to false.
     # @option options [String] :error_message A string message describing the failure that occurred.
     #                                         1,000 character limit.
+    #
+    # @return [Fixnum] The HTTP status code that was returned from Proby.
     def send_finish_notification(proby_task_id=nil, options={})
       Notifier.send_notification('finish', proby_task_id, options)
     end

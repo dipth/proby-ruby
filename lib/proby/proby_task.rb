@@ -88,8 +88,8 @@ module Proby
     # @option attributes [String] :time_zone <b>Optional</b> The time zone of the machine executing the task.
     # @option attributes [String] :machine <b>Optional</b> The name of the machine that is responsible for running this task.
     #                               Will default to the default time zone configured in Proby if not specified.
-    # @option attributes [TrueClass|FalseClass] :finish_alarms_enabled <b>Optional</b> true if you would like to receive finish alarms for
-    #                               this task, false otherwise (default: true).
+    # @option attributes [Boolean] :finish_alarms_enabled <b>Optional</b> true if you would like to receive finish alarms for
+    #                                this task, false otherwise (default: true).
     # @option attributes [Fixnum] :maximum_run_time <b>Optional</b> The maximum amount of time the task is allowed to run before
     #                               Proby sends a finish alarm. If not specified, Proby will determine when an alarm should be
     #                               sent based on past run times.
