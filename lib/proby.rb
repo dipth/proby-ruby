@@ -41,7 +41,7 @@ module Proby
 
     # Get the logger used by Proby.
     def logger
-      @logger || Logger.new("/dev/null")
+      @logger ||= Logger.new("/dev/null")
     end
 
     # Send a start notification for this task to Proby.
