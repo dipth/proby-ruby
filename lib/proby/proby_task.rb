@@ -274,9 +274,5 @@ module Proby
       end
     end
 
-    def self.blank?(s)
-      s.nil? || s.strip.empty?
-    end
-
   end
 end
