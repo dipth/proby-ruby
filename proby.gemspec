@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "yard", "~> 0.6.4"
   s.add_development_dependency "bluecloth", "~> 2.1.0"
   s.add_development_dependency "fakeweb", "~> 1.3.0"
+  s.add_development_dependency "mocha", "~> 0.10.5"
   s.add_development_dependency "shoulda", "~> 2.11.3"
   s.add_development_dependency "json", "~> 1.6.6"
 

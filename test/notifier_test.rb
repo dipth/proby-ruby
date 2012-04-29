@@ -55,6 +55,21 @@ class NotifierTest < Test::Unit::TestCase
       FakeWeb.register_uri(:post, Proby::ProbyHttpApi.base_uri + "/api/v1/tasks/iii999ooo222/finish.json", :status => ["200", "OK"])
       assert_equal 200, Proby.send_finish_notification
     end
+
+    should "send a start and finish notificaiton when using the monitor method" do
+      Proby.expects(:send_start_notification).with("abc123xyz456")
+      Proby.expects(:send_finish_notification).with() { |param1, param2| param1 == "abc123xyz456" && param2[:failed] == false && param2[:error_message].nil? }
+      assert_equal "foo", Proby.monitor("abc123xyz456") { "foo" }
+    end
+
+    should "include error information in the finish notification if the block passed to monitor raises an exception" do
+      Proby.expects(:send_start_notification).with("abc123xyz456")
+      Proby.expects(:send_finish_notification).with() { |param1, param2| param1 == "abc123xyz456" && param2[:failed] == true && param2[:error_message].include?("This is the error message") }
+      e = assert_raise Exception do
+        Proby.monitor("abc123xyz456") { raise Exception.new("This is the error message") }
+      end
+      assert_equal "This is the error message", e.message
+    end
   end
 
 end

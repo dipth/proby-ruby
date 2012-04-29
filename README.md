@@ -39,15 +39,19 @@ In addition, you can optionally give Proby a logger to use.
 
 Sending Notifications
 ---------------------
-To send a start notification
+The easiest way to have Proby monitor your task is by wrapping your code in a call to Proby's `monitor` function.
+
+    Proby.monitor(task_api_id) do
+      # Do something here
+    end
+
+You can also send the start and finish notifications manually via calls to `send_start_notification` and `send_finish_notification`.
 
     Proby.send_start_notification(task_api_id)
-
-To send a finish notification
-
+    # Do something here
     Proby.send_finish_notification(task_api_id)
 
-Specifying the `task_api_id` when calling the notification methods is optional.  If it is not provided,
+Specifying the `task_api_id` when calling any of the the notification methods is optional.  If it is not provided,
 Proby will use the value of the `PROBY_TASK_ID` environment variable.  If no task id is specified
 in the method call, and no value is set in the `PROBY_TASK_ID` environment variable, then no notification
 will be sent.
