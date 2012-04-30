@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    proby (2.0.0)
+    proby (2.1.0)
       chronic (~> 0.6.7)
       httparty (~> 0.8.1)
       multi_json (~> 1.2.0)
