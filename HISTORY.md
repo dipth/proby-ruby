@@ -1,5 +1,5 @@
-NEXT
-----
+2.1.0
+-----
 * Added Proby.monitor method
 
 2.0.0
