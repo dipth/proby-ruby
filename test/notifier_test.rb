@@ -13,7 +13,12 @@ class NotifierTest < Test::Unit::TestCase
   end
 
   should "not send the notification if the api_key is not set" do
-    assert_nil Proby.send_start_notification("abc123")
+    previous_stderr, $stderr = $stderr, StringIO.new
+    begin
+      assert_nil Proby.send_start_notification("abc123")
+    ensure
+      $stderr = previous_stderr
+    end
   end
 
   context "with an api key set" do

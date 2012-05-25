@@ -3,7 +3,7 @@ module Proby
 
     def self.send_notification(type, proby_task_id, options={})
       if Proby.api_key.nil?
-        Proby.logger.warn "Proby: No notification sent because API key is not set"
+        $stderr.puts "Proby: No notification sent because API key is not set.  Set it using Proby.api_key = 'my_api_key'"
         return nil
       end
 
