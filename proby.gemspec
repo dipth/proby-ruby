@@ -1,5 +1,8 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path("../lib/proby/version", __FILE__)
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
+require 'proby/version'
 
 Gem::Specification.new do |s|
   s.name        = "proby"
