@@ -307,10 +307,12 @@ END
     proby_task = Proby::ProbyTask.new('api_id' => 'abc123', 'name' => 'Test task', 'crontab' => '* * * * *')
     assert proby_task.delete
     assert proby_task.frozen?
-    e = assert_raise TypeError do
+    begin
       proby_task.name = "foo"
+      assert false, "Should have raised an exception"
+    rescue Exception => e
+      assert e.message.include?("can't modify frozen")
     end
-    assert_equal "can't modify frozen object", e.message
   end
 
   should "raise an exception if unable to delete a task" do
