@@ -1,6 +1,7 @@
 # Proby
 A simple library for working with the Proby task monitoring application.
 
+[![Build Status](https://secure.travis-ci.org/signal/proby-ruby.png?branch=master)](http://travis-ci.org/signal/proby-ruby)
 
 Installation
 ------------
